@@ -13,9 +13,18 @@ $(document).ready(function () {
         };
     var dims = 3; //dimensions for the game's board
 
-    //helper function
+    //helper functions
     function switchPlayer(player) {
         return player == PLAYERX ? PLAYERO : PLAYERX;
+    }
+
+    function subArrayIndex(arr, sub) {
+        var target = sub.toString();
+        for (var i = 0; i < arr.length; i++) {
+            if (target === arr[i].toString()) break;
+        }
+
+        return i || -1;
     }
 
     //Class representing the game's board
@@ -81,11 +90,11 @@ $(document).ready(function () {
             for (var i = 0; i < this.dims; i++) {
 
                 if (this.grid[i][0] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][0] == this.grid[i][2]) {
-                    console.log('first')
+                    //console.log('first')
                     return this.grid[i][0];
                     //check cols
                 } else if (this.grid[0][i] !== 0 && this.grid[0][i] == this.grid[1][i] && this.grid[0][i] == this.grid[2][i]) {
-                    console.log('second', i)
+                    //console.log('second', i)
                     return this.grid[0][i];
                 }
             }
@@ -101,22 +110,50 @@ $(document).ready(function () {
             }
         };
 
+        this.clone = function () {
+
+            return $.extend(true, {}, this);
+        }
+
     }
 
     function minimax(board, player) {
         if (board.checkWin() != 'None') {
             return [SCORES[board.checkWin()], [-1, -1]];
         } else {
+            var best;
             if (player == PLAYERX) {
-                var best = [-2, ''];
+                best = [-2, ''];
                 board.getEmptySquares().forEach(function (square) {
-                    console.log('sq', square)
-                    var copy = board.grid.concat();
+                    //console.log('sq', square);
+                    var copy = board.clone();
                     copy.move(square, player);
-                })
+                    var score = minimax(copy, switchPlayer(player))[0];
+                    if (score == 1) {
+                        return [score, square];
+                    }
+                    if (score > best[0]) {
+                        best = [score, square];
+                    }
+                });
+                return best;
+            } else {
+                best = [2, ''];
+                board.getEmptySquares().forEach(function (square) {
+                    //console.log('sq', square);
+                    var copy = board.clone();
+                    copy.move(square, player);
+                    var score = minimax(copy, switchPlayer(player))[0];
+                    if (score == -1) {
+                        return [score, square];
+                    }
+                    if (score < best[0]) {
+                        best = [score, square];
+                    }
+                });
+                return best;
             }
         }
-
     }
 
 
@@ -134,30 +171,47 @@ $(document).ready(function () {
             }
         }
 
-        $('.square').on('click', function () {
+        function onTimerTick() {
+            var id;
             if (tripleT.checkWin() === 'None') {
+                console.log('count', moveCount)
+                if (moveCount === 0) {
+                    $('.square').on('click', function () {
 
-                if (moveCount % 2 === 0) {
-                    $(this).text('X');
-                    var id = $(this).attr('id');
-                    tripleT.move(coords[id], PLAYERX);
-                    moveCount++;
+                        $(this).text('X');
+                        id = $(this).attr('id');
+                        tripleT.move(coords[id], PLAYERX);
+                        moveCount = 1;
+                        onTimerTick();
+                    });
                 } else {
 
-                }
-            }
-            console.log(tripleT.grid.concat());
-            console.log('winner!', tripleT.checkWin())
-            //console.log(SCORES[2])
-        });
+                    var move = minimax(tripleT, PLAYERO)[1];
+                    console.log('move', move)
+                    tripleT.move(move, PLAYERO);
+                    id = subArrayIndex(coords, move);
+                    console.log('id', id)
+                    $('#' + id).text('O');
 
+                    moveCount = 0;
+
+                    onTimerTick();
+                }
+
+                //console.log('winner!', tripleT.checkWin())
+
+            }
+        }
+
+        setInterval(onTimerTick, 1000); // 33 milliseconds = ~ 30 frames per sec
 
     }
 
     runGame(dims);
 
-    //var testB = [[0, 2, 1], [1, 1, 2], [0, 2, 1]];
-    //var ttt = new Board(3 /*, testB*/);
+    // var testB = [[2, 0, 0], [1, 2, 0], [1, 1, 0]];
+    // var ttt = new Board(3, testB);
+    //console.log('min', minimax(ttt, PLAYERO))
     /*ttt.move(2, 1, PLAYERX);
      ttt.showGrid();
      console.log('winner', ttt.checkWin());*/
