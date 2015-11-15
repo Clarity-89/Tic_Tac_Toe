@@ -4,13 +4,7 @@
 
 $(document).ready(function () {
 
-    $('.square').on('click', function () {
-
-        $(this).text('X')
-
-    })
-
-    //game's constants
+    //Game's constants
     var DRAW = 0, PLAYERX = 1, PLAYERO = 2,
         SCORES = {
             PLAYERX: 1,
@@ -26,9 +20,9 @@ $(document).ready(function () {
             this.grid = board;
         } else {
             this.grid = [];
-            for (var row = 0; row < dims[0]; row++) {
+            for (var row = 0; row < dims; row++) {
                 this.grid[row] = [];
-                for (var col = 0; col < dims[1]; col++) {
+                for (var col = 0; col < dims; col++) {
                     this.grid[row][col] = 0;
                 }
             }
@@ -36,7 +30,7 @@ $(document).ready(function () {
 
         //Show visual representation of the grid
         this.showGrid = function () {
-            for (var row = 0; row < dims[0]; row++) {
+            for (var row = 0; row < dims; row++) {
                 console.log(this.grid[row]);
             }
         };
@@ -51,8 +45,8 @@ $(document).ready(function () {
         //Return an array of all empty squares in form [row, col]
         this.getEmptySquares = function () {
             var empty = [];
-            for (var row = 0; row < this.dims[0]; row++) {
-                for (var col = 0; col < this.dims[1]; col++) {
+            for (var row = 0; row < this.dims; row++) {
+                for (var col = 0; col < this.dims; col++) {
                     if (this.grid[row][col] === 0) {
                         empty.push([row, col]);
                     }
@@ -64,9 +58,9 @@ $(document).ready(function () {
         /*Place player on the board at position (row, col).
          player should be either the constant PLAYERX or PLAYERO.
          Does nothing if board square is not empty.*/
-        this.move = function (row, col, player) {
-            if (this.grid[row][col] === 0) {
-                this.grid[row][col] = player;
+        this.move = function (square, player) {
+            if (this.grid[square[0]][square[1]] === 0) {
+                this.grid[square[0]][square[1]] = player;
             }
         };
 
@@ -78,7 +72,7 @@ $(document).ready(function () {
         this.checkWin = function () {
             // var winner = '';
             //check rows
-            for (var i = 0; i < this.dims[0]; i++) {
+            for (var i = 0; i < this.dims; i++) {
 
                 if (this.grid[0][i] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][1] == this.grid[i][2]) {
                     return this.grid[i][0];
@@ -102,13 +96,34 @@ $(document).ready(function () {
     }
 
     //Function that runs the game
-    function runGame() {
+    function runGame(dims) {
+        var tripleT = new Board(dims);
 
+        //Board's coordinates to map to id of the html board
+        var coords = [];
+
+        var i = 0;
+        for (var row = 0; row < dims; row++) {
+            for (var col = 0; col < dims; col++) {
+                coords[i++] = [row, col];
+            }
+
+        }
+
+        $('.square').on('click', function () {
+            var id = $(this).attr('id');
+            console.log(coords[id])
+            tripleT.move(coords[id], PLAYERX);
+            console.log(tripleT.showGrid());
+        });
     }
 
-    var testB = [[0, 2, 1], [1, 1, 2], [0, 2, 1]];
-    var ttt = new Board([3, 3], testB);
-    //ttt.move(2, 1, 'PLAYERX');
-    console.log('winner', ttt.checkWin());
+    runGame(3);
+
+    //var testB = [[0, 2, 1], [1, 1, 2], [0, 2, 1]];
+    //var ttt = new Board(3 /*, testB*/);
+    /*ttt.move(2, 1, PLAYERX);
+     ttt.showGrid();
+     console.log('winner', ttt.checkWin());*/
 
 });
