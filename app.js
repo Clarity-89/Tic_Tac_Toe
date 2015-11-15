@@ -11,7 +11,7 @@ $(document).ready(function () {
             DRAW: 0,
             PLAYERO: -1
         };
-
+    var dims = 3; //dimensions for the game's board
     //Class representing the game's board
     function Board(dims, board) {
         this.dims = dims;
@@ -74,16 +74,18 @@ $(document).ready(function () {
             //check rows
             for (var i = 0; i < this.dims; i++) {
 
-                if (this.grid[0][i] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][1] == this.grid[i][2]) {
+                if (this.grid[i][0] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][0] == this.grid[i][2]) {
+                    console.log('first')
                     return this.grid[i][0];
                     //check cols
-                } else if (this.grid[i][0] !== 0 && this.grid[0][i] == this.grid[1][i] && this.grid[1][i] == this.grid[2][i]) {
+                } else if (this.grid[0][i] !== 0 && this.grid[0][i] == this.grid[1][i] && this.grid[0][i] == this.grid[2][i]) {
+                    console.log('second', i)
                     return this.grid[0][i];
                 }
             }
             //check diags
-            if (this.grid[1][1] !== 0 && (this.grid[0][0] == this.grid[1][1] && this.grid[1][1] == this.grid[2][2] ||
-                this.grid[0][2] == this.grid[1][1] && this.grid[1][1] == this.grid[2][0])) {
+            if (this.grid[1][1] !== 0 && (this.grid[0][0] == this.grid[1][1] && this.grid[0][0] == this.grid[2][2] ||
+                this.grid[0][2] == this.grid[1][1] && this.grid[0][2] == this.grid[2][0])) {
                 return this.grid[1][1];
                 //check draw
             } else if (this.getEmptySquares().length == 1) {
@@ -97,26 +99,39 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame(dims) {
+        //Create a new board for the game
         var tripleT = new Board(dims);
-
         //Board's coordinates to map to id of the html board
         var coords = [];
-
+        var moveCount = 0;
         var i = 0;
         for (var row = 0; row < dims; row++) {
             for (var col = 0; col < dims; col++) {
                 coords[i++] = [row, col];
             }
-
         }
 
         $('.square').on('click', function () {
-            var id = $(this).attr('id');
-            console.log(coords[id])
-            tripleT.move(coords[id], PLAYERX);
+            if (tripleT.checkWin() === 'None') {
+
+                if (moveCount % 2 === 0) {
+                    $(this).text('X');
+                    var id = $(this).attr('id');
+                    tripleT.move(coords[id], PLAYERX);
+                    moveCount++;
+                } else {
+
+                }
+            }
+
+
             console.log(tripleT.showGrid());
+            console.log('winner!', tripleT.checkWin())
         });
+
+
     }
+
 
     runGame(3);
 
