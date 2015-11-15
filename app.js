@@ -7,11 +7,17 @@ $(document).ready(function () {
     //Game's constants
     var DRAW = 0, PLAYERX = 1, PLAYERO = 2,
         SCORES = {
-            PLAYERX: 1,
-            DRAW: 0,
-            PLAYERO: -1
+            1: 1,
+            0: 0,
+            2: -1
         };
     var dims = 3; //dimensions for the game's board
+
+    //helper function
+    function switchPlayer(player) {
+        return player == PLAYERX ? PLAYERO : PLAYERX;
+    }
+
     //Class representing the game's board
     function Board(dims, board) {
         this.dims = dims;
@@ -97,6 +103,23 @@ $(document).ready(function () {
 
     }
 
+    function minimax(board, player) {
+        if (board.checkWin() != 'None') {
+            return [SCORES[board.checkWin()], [-1, -1]];
+        } else {
+            if (player == PLAYERX) {
+                var best = [-2, ''];
+                board.getEmptySquares().forEach(function (square) {
+                    console.log('sq', square)
+                    var copy = board.grid.concat();
+                    copy.move(square, player);
+                })
+            }
+        }
+
+    }
+
+
     //Function that runs the game
     function runGame(dims) {
         //Create a new board for the game
@@ -123,17 +146,15 @@ $(document).ready(function () {
 
                 }
             }
-
-
-            console.log(tripleT.showGrid());
+            console.log(tripleT.grid.concat());
             console.log('winner!', tripleT.checkWin())
+            //console.log(SCORES[2])
         });
 
 
     }
 
-
-    runGame(3);
+    runGame(dims);
 
     //var testB = [[0, 2, 1], [1, 1, 2], [0, 2, 1]];
     //var ttt = new Board(3 /*, testB*/);
