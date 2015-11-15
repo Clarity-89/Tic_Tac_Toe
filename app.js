@@ -18,13 +18,14 @@ $(document).ready(function () {
         return player == PLAYERX ? PLAYERO : PLAYERX;
     }
 
+    //Find index of subarray in array
     function subArrayIndex(arr, sub) {
         var target = sub.toString();
         for (var i = 0; i < arr.length; i++) {
             if (target === arr[i].toString()) break;
         }
 
-        return i || -1;
+        return i;
     }
 
     //Class representing the game's board
@@ -113,8 +114,9 @@ $(document).ready(function () {
         this.clone = function () {
 
             return $.extend(true, {}, this);
-        }
 
+            //return new Board(3, this.grid);
+        }
     }
 
     function minimax(board, player) {
@@ -163,47 +165,71 @@ $(document).ready(function () {
         var tripleT = new Board(dims);
         //Board's coordinates to map to id of the html board
         var coords = [];
-        var moveCount = 0;
-        var i = 0;
+        var moveCount = false;
+        var id, i = 0;
         for (var row = 0; row < dims; row++) {
             for (var col = 0; col < dims; col++) {
                 coords[i++] = [row, col];
             }
         }
 
-        function onTimerTick() {
-            var id;
+        $('.square').on('click', function () {
             if (tripleT.checkWin() === 'None') {
-                console.log('count', moveCount)
-                if (moveCount === 0) {
-                    $('.square').on('click', function () {
+                $(this).text('X');
+                id = $(this).attr('id');
+                tripleT.move(coords[id], PLAYERX);
 
-                        $(this).text('X');
-                        id = $(this).attr('id');
-                        tripleT.move(coords[id], PLAYERX);
-                        moveCount = 1;
-                        onTimerTick();
-                    });
-                } else {
-
+                if (tripleT.checkWin() === 'None') {
                     var move = minimax(tripleT, PLAYERO)[1];
                     console.log('move', move)
                     tripleT.move(move, PLAYERO);
                     id = subArrayIndex(coords, move);
                     console.log('id', id)
                     $('#' + id).text('O');
-
-                    moveCount = 0;
-
-                    onTimerTick();
+                } else {
+                    alert('winner is ' + tripleT.checkWin())
                 }
-
-                //console.log('winner!', tripleT.checkWin())
-
+            } else {
+                alert('winner is ' + tripleT.checkWin())
             }
-        }
+        });
 
-        setInterval(onTimerTick, 1000); // 33 milliseconds = ~ 30 frames per sec
+
+        /*function onTimerTick() {
+         var id;
+         console.log(tripleT.checkWin())
+         if (tripleT.checkWin() === 'None') {
+         console.log('count', moveCount)
+         if (moveCount === false) {
+         $('.square').on('click', function () {
+
+         $(this).text('X');
+         id = $(this).attr('id');
+         tripleT.move(coords[id], PLAYERX);
+         moveCount = true;
+         onTimerTick();
+         });
+         } else {
+
+         var move = minimax(tripleT, PLAYERO)[1];
+         console.log('move', move)
+         tripleT.move(move, PLAYERO);
+         id = subArrayIndex(coords, move);
+         console.log('id', id)
+         $('#' + id).text('O');
+
+         moveCount = false;
+
+         onTimerTick();
+         }
+
+         //console.log('winner!', tripleT.checkWin())
+
+         }
+         } */
+
+
+        //setInterval(onTimerTick, 1000); // 33 milliseconds = ~ 30 frames per sec
 
     }
 
