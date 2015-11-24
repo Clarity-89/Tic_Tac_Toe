@@ -130,10 +130,9 @@ $(document).ready(function () {
             board.getEmptySquares().forEach(function (square) {
 
                 var copy = board.clone();
-                //console.log('Board', board, 'copy', copy)
                 copy.move(square, player);
                 thisScore = mult * minimax(copy, switchPlayer(player))[0];
-                //console.log(square, player, thisScore)
+
                 if (thisScore >= maxScore) {
                     maxScore = thisScore;
                     bestMove = square;
