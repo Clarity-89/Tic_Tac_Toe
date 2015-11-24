@@ -77,7 +77,7 @@ $(document).ready(function () {
      Does nothing if board square is not empty.*/
     Board.prototype.move = function (square, player) {
         if (this.square(square[0], square[1]) === 0) {
-            this.move(square, player);
+            this.grid[square[0]][square[1]] = player;
         }
     };
 
