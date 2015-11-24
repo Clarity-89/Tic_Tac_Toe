@@ -91,19 +91,19 @@ $(document).ready(function () {
         //check rows
         for (var i = 0; i < this.dims; i++) {
 
-            if (this.square([i][0]) !== 0 && this.square([i][0]) == this.square([i][1]) && this.square([i][0]) == this.square([i][2])) {
+            if (this.square([i],[0]) !== 0 && this.square([i],[0]) == this.square([i],[1]) && this.square([i],[0]) == this.square([i],[2])) {
                 //console.log('first')
-                return this.square([i][0]);
+                return this.square([i],[0]);
                 //check cols
-            } else if (this.square([0][i]) !== 0 && this.square([0][i]) == this.square([1][i]) && this.square([0][i]) == this.square([2][i])) {
+            } else if (this.square([0],[i]) !== 0 && this.square([0],[i]) == this.square([1],[i]) && this.square([0],[i]) == this.square([2],[i])) {
                 //console.log('second', i)
-                return this.square([0][i]);
+                return this.square([0],[i]);
             }
         }
         //check diags
-        if (this.square([1][1]) !== 0 && (this.square([0][0]) == this.square([1][1]) && this.square([0][0]) == this.square([2][2]) ||
-            this.square([0][2]) == this.square([1][1]) && this.square([0][2]) == this.square([2][0]))) {
-            return this.square([1][1]);
+        if (this.square([1],[1]) !== 0 && (this.square([0],[0]) == this.square([1],[1]) && this.square([0],[0]) == this.square([2],[2]) ||
+            this.square([0],[2]) == this.square([1],[1]) && this.square([0],[2]) == this.square([2],[0]))) {
+            return this.square([1],[1]);
             //check draw
         } else if (this.getEmptySquares().length === 0) {
             return DRAW;
