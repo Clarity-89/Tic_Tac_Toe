@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     //helper functions
     function switchPlayer(player) {
-        return player == PLAYERX ? PLAYERO : PLAYERX;
+        return player === PLAYERX ? PLAYERO : PLAYERX;
     }
 
     //Find index of subarray in array
@@ -43,121 +43,163 @@ $(document).ready(function () {
                 }
             }
         }
-
-        //Show visual representation of the grid
-        this.showGrid = function () {
-            for (var row = 0; row < dims; row++) {
-                console.log(this.grid[row]);
-            }
-        };
-
-        /*Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
-         that correspond to the contents of the board at position (row, col).*/
-        this.square = function (row, col) {
-            var results = ['EMPTY', 'PLAYERX', 'PLAYERO'];
-            return results[this.grid[row][col]];
-        };
-
-        //Return an array of all empty squares in form [row, col]
-        this.getEmptySquares = function () {
-            var empty = [];
-            for (var row = 0; row < this.dims; row++) {
-                for (var col = 0; col < this.dims; col++) {
-                    if (this.grid[row][col] === 0) {
-                        empty.push([row, col]);
-                    }
-                }
-            }
-            return empty;
-        };
-
-        /*Place player on the board at position (row, col).
-         player should be either the constant PLAYERX or PLAYERO.
-         Does nothing if board square is not empty.*/
-        this.move = function (square, player) {
-            if (this.grid[square[0]][square[1]] === 0) {
-                this.grid[square[0]][square[1]] = player;
-            }
-        };
-
-        /*Returns a constant associated with the state of the game
-         If PLAYERX wins, returns PLAYERX.
-         If PLAYERO wins, returns PLAYERO.
-         If game is drawn, returns DRAW.
-         If game is in progress, returns None.*/
-        this.checkWin = function () {
-            // var winner = '';
-            //check rows
-            for (var i = 0; i < this.dims; i++) {
-
-                if (this.grid[i][0] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][0] == this.grid[i][2]) {
-                    //console.log('first')
-                    return this.grid[i][0];
-                    //check cols
-                } else if (this.grid[0][i] !== 0 && this.grid[0][i] == this.grid[1][i] && this.grid[0][i] == this.grid[2][i]) {
-                    //console.log('second', i)
-                    return this.grid[0][i];
-                }
-            }
-            //check diags
-            if (this.grid[1][1] !== 0 && (this.grid[0][0] == this.grid[1][1] && this.grid[0][0] == this.grid[2][2] ||
-                this.grid[0][2] == this.grid[1][1] && this.grid[0][2] == this.grid[2][0])) {
-                return this.grid[1][1];
-                //check draw
-            } else if (this.getEmptySquares().length == 1) {
-                return 0;
-            } else {
-                return 'None';
-            }
-        };
-
-        this.clone = function () {
-
-            return $.extend(true, {}, this);
-
-            //return new Board(3, this.grid);
-        }
     }
+
+    //Show visual representation of the grid
+    Board.prototype.showGrid = function () {
+        for (var row = 0; row < dims; row++) {
+            console.log(this.grid[row]);
+        }
+    };
+
+    /*Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
+     that correspond to the contents of the board at position (row, col).*/
+    Board.prototype.square = function (row, col) {
+        var results = ['EMPTY', 'PLAYERX', 'PLAYERO'];
+        return results[this.grid[row][col]];
+    };
+
+    //Return an array of all empty squares in form [row, col]
+    Board.prototype.getEmptySquares = function () {
+        var empty = [];
+        for (var row = 0; row < this.dims; row++) {
+            for (var col = 0; col < this.dims; col++) {
+                if (this.grid[row][col] === 0) {
+                    empty.push([row, col]);
+                }
+            }
+        }
+        return empty;
+    };
+
+    /*Place player on the board at position (row, col).
+     player should be either the constant PLAYERX or PLAYERO.
+     Does nothing if board square is not empty.*/
+    Board.prototype.move = function (square, player) {
+        if (this.grid[square[0]][square[1]] == '0') {
+            this.grid[square[0]][square[1]] = player;
+        }
+    };
+
+    /*Returns a constant associated with the state of the game
+     If PLAYERX wins, returns PLAYERX.
+     If PLAYERO wins, returns PLAYERO.
+     If game is drawn, returns DRAW.
+     If game is in progress, returns None.*/
+    Board.prototype.checkWin = function () {
+        var results = [DRAW, PLAYERX, PLAYERO];
+        //check rows
+        for (var i = 0; i < this.dims; i++) {
+
+            if (this.grid[i][0] !== 0 && this.grid[i][0] == this.grid[i][1] && this.grid[i][0] == this.grid[i][2]) {
+                //console.log('first')
+                return results[this.grid[i][0]];
+                //check cols
+            } else if (this.grid[0][i] !== 0 && this.grid[0][i] == this.grid[1][i] && this.grid[0][i] == this.grid[2][i]) {
+                //console.log('second', i)
+                return results[this.grid[0][i]];
+            }
+        }
+        //check diags
+        if (this.grid[1][1] !== 0 && (this.grid[0][0] == this.grid[1][1] && this.grid[0][0] == this.grid[2][2] ||
+            this.grid[0][2] == this.grid[1][1] && this.grid[0][2] == this.grid[2][0])) {
+            return results[this.grid[1][1]];
+            //check draw
+        } else if (this.getEmptySquares().length == 0) {
+            return DRAW;
+        } else {
+            return 'None';
+        }
+    };
+
+    Board.prototype.clone = function () {
+
+        //return $.extend(true, {}, this);
+
+        return new Board(3, this.grid.concat());
+    };
+
+
+    /* function minimax(board, player) {
+     if (board.checkWin() != 'None') {
+     return [SCORES[board.checkWin()], [-1, -1]];
+     } else {
+     var best;
+     if (player == PLAYERX) {
+     best = [-2, ''];
+     board.getEmptySquares().forEach(function (square) {
+     //console.log('sq', square);
+     var copy = board.clone();
+     copy.move(square, player);
+     var score = minimax(copy, switchPlayer(player))[0];
+     if (score == 1) {
+     return [score, square];
+     }
+     if (score > best[0]) {
+     best = [score, square];
+     }
+     });
+     return best;
+     } else {
+     best = [2, ''];
+     board.getEmptySquares().forEach(function (square) {
+     //console.log('sq', square);
+     var copy = board.clone();
+     copy.move(square, player);
+     var score = minimax(copy, switchPlayer(player))[0];
+     if (score == -1) {
+     return [score, square];
+     }
+     if (score < best[0]) {
+     best = [score, square];
+     }
+     });
+     return best;
+     }
+     }
+     }*/
 
     function minimax(board, player) {
+        //console.log(board, player)
+        var mult = SCORES['' + player], thisScore;
+        var maxScore = -1, bestMove = null;
+
+        //console.log('mult', mult)
+        //if (player == PLAYERO) mult = -1;
         if (board.checkWin() != 'None') {
+            //console.log('cw', SCORES[board.checkWin()])
             return [SCORES[board.checkWin()], [-1, -1]];
-        } else {
-            var best;
-            if (player == PLAYERX) {
-                best = [-2, ''];
-                board.getEmptySquares().forEach(function (square) {
-                    //console.log('sq', square);
-                    var copy = board.clone();
-                    copy.move(square, player);
-                    var score = minimax(copy, switchPlayer(player))[0];
-                    if (score == 1) {
-                        return [score, square];
-                    }
-                    if (score > best[0]) {
-                        best = [score, square];
-                    }
-                });
-                return best;
-            } else {
-                best = [2, ''];
-                board.getEmptySquares().forEach(function (square) {
-                    //console.log('sq', square);
-                    var copy = board.clone();
-                    copy.move(square, player);
-                    var score = minimax(copy, switchPlayer(player))[0];
-                    if (score == -1) {
-                        return [score, square];
-                    }
-                    if (score < best[0]) {
-                        best = [score, square];
-                    }
-                });
-                return best;
-            }
         }
+        board.getEmptySquares().forEach(function (square) {
+
+            var copy = board.clone();
+            console.log('Board', board, 'copy', copy)
+            copy.move(square, player);
+            thisScore = mult * minimax(copy, switchPlayer(player))[0];
+            //console.log(square, player, thisScore)
+            if (thisScore >= maxScore) {
+                maxScore = thisScore;
+                bestMove = square;
+            }
+        });
+
+        return [mult * maxScore, bestMove];
+
     }
 
+    /*function mmMove(board, player){
+     var thisScore, bestScore = -1, bestMove = null;
+     board.getEmptySquares().forEach(function (square) {
+     var copy = board.clone();
+     copy.move(square, player);
+     thisScore = minimax(copy, switchPlayer(player));
+     if(thisScore >= bestScore) {
+     bestScore = thisScore;
+     bestMove = square;
+     }
+     });
+     return bestMove;
+     }*/
 
     //Function that runs the game
     function runGame(dims) {
@@ -165,26 +207,27 @@ $(document).ready(function () {
         var tripleT = new Board(dims);
         //Board's coordinates to map to id of the html board
         var coords = [];
-        var moveCount = false;
         var id, i = 0;
         for (var row = 0; row < dims; row++) {
             for (var col = 0; col < dims; col++) {
                 coords[i++] = [row, col];
             }
         }
-
+        tripleT.showGrid();
         $('.square').on('click', function () {
+            //tripleT.showGrid();
             if (tripleT.checkWin() === 'None') {
                 $(this).text('X');
                 id = $(this).attr('id');
                 tripleT.move(coords[id], PLAYERX);
 
                 if (tripleT.checkWin() === 'None') {
-                    var move = minimax(tripleT, PLAYERO)[1];
+                    //tripleT.showGrid();
+                    var move = minimax(tripleT, PLAYERX)[1];
                     console.log('move', move)
                     tripleT.move(move, PLAYERO);
                     id = subArrayIndex(coords, move);
-                    console.log('id', id)
+                    //console.log('id', id)
                     $('#' + id).text('O');
                 } else {
                     alert('winner is ' + tripleT.checkWin())
@@ -192,6 +235,7 @@ $(document).ready(function () {
             } else {
                 alert('winner is ' + tripleT.checkWin())
             }
+
         });
 
 
@@ -235,9 +279,10 @@ $(document).ready(function () {
 
     runGame(dims);
 
-    // var testB = [[2, 0, 0], [1, 2, 0], [1, 1, 0]];
-    // var ttt = new Board(3, testB);
-    //console.log('min', minimax(ttt, PLAYERO))
+    var testB = [[2, 0, 0], [1, 2, 0], [1, 1, 0]];
+    var test2 = [[0, 2, 1], [1, 2, 0], [1, 1, 2]];
+    var ttt = new Board(3, test2);
+    //console.log('min', minimax(ttt, PLAYERO)[1]);
     /*ttt.move(2, 1, PLAYERX);
      ttt.showGrid();
      console.log('winner', ttt.checkWin());*/
