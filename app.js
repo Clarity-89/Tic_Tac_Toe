@@ -134,7 +134,7 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
-        console.log('cach', $.cache)
+
         //clear previous board
         for (var i = 0; i < dims * dims; i++) {
             $('#' + i).text('');
