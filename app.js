@@ -184,7 +184,6 @@ $(document).ready(function () {
 
     runGame();
 
-    $('.winner').modal('show');
     $('#replay').on('click', function () {
         $('.winner').modal('hide');
         runGame();
