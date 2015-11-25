@@ -182,7 +182,7 @@ $(document).ready(function () {
         $('.winner').modal('show');
     }
 
-    //runGame();
+    runGame();
 
     $('.winner').modal('show');
     $('#replay').on('click', function () {
