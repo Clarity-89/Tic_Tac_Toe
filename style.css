@@ -1,6 +1,8 @@
 
 body {
     font-family: 'Lato', sans-serif;
+    background: url('http://www.pptbackgrounds.net/uploads/tic-tac-toe-backgrounds-wallpapers.jpg') no-repeat;
+    background-size: cover;
 }
 
 .square {
@@ -9,13 +11,13 @@ body {
 }
 
 .v {
-    border-left: 1px solid #000;
-    border-right: 1px solid #000;
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
 }
 
 .h {
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
+    border-top: 2px solid #c10f26;
+    border-bottom: 2px solid #c10f26;
 }
 
 .container {
@@ -31,3 +33,6 @@ td {
     text-align: center;
     font-size: 48px;
 }
+
+
+

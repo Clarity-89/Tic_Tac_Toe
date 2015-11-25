@@ -102,9 +102,9 @@ $(document).ready(function () {
 
     Board.prototype.clone = function () {
 
-        //return $.extend(true, {}, this);
+        return $.extend(true, {}, this);
 
-        return new Board(dims, this.grid);
+        //return new Board(dims, this.grid);
     };
 
     function minimax(board, player) {
@@ -134,18 +134,24 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
-
+        console.log('cach', $.cache)
+        //clear previous board
+        for (var i = 0; i < dims * dims; i++) {
+            $('#' + i).text('');
+        }
         //Create a new board for the game
         var tripleT = new Board(dims);
+
         playerMove(tripleT);
     }
 
     function playerMove(board) {
+
         $('.square').on('click', function () {
 
-            $(this).text('X');
             var id = $(this).attr('id');
             if (board.square(id) === 0) {
+                $(this).text('X');
                 board.move(id, PLAYERX);
                 if (board.checkWin() === 'None') {
                     AImove(board);
@@ -176,5 +182,14 @@ $(document).ready(function () {
         $('.winner').modal('show');
     }
 
-    runGame();
+    //runGame();
+
+    $('.winner').modal('show');
+    $('#replay').on('click', function () {
+        $('.winner').modal('hide');
+        runGame();
+    });
+
+    //var t = new Board(dims, [0, 1, 0, 2, 1, 1, 0, 2, 2]);
+    //console.log(t.checkWin());
 });
