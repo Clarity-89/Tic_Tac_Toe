@@ -3,26 +3,26 @@ body {
     font-family: 'Lato', sans-serif;
 }
 
-.square{
-    width:150px;
-    height:150px;
+.square {
+    width: 150px;
+    height: 150px;
 }
 
-.v{
-    border-left:1px solid #000;
-    border-right:1px solid #000;
+.v {
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
 }
 
-.h{
-    border-top:1px solid #000;
-    border-bottom:1px solid #000;
+.h {
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
 }
 
 .container {
     margin-top: 5%;
 }
 
-h1 {
+h1, .modal-title, .modal-body {
     text-align: center;
 }
 

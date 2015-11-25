@@ -134,24 +134,10 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
+
         //Create a new board for the game
         var tripleT = new Board(dims);
-
-
-            playerMove(tripleT);
-
-
-
-
-        /*else
-         {
-         alert('winner is ' + tripleT.checkWin())
-         }
-         else
-         {
-         alert('winner is ' + tripleT.checkWin())
-         }*/
-
+        playerMove(tripleT);
     }
 
     function playerMove(board) {
@@ -164,7 +150,7 @@ $(document).ready(function () {
                 if (board.checkWin() === 'None') {
                     AImove(board);
                 } else {
-                    alert('winner is ' + board.checkWin());
+                    declareWinner(board.checkWin());
                 }
             } else {
                 playerMove(board);
@@ -179,10 +165,16 @@ $(document).ready(function () {
         if (board.checkWin() === 'None') {
             playerMove(board);
         } else {
-            alert('winner is ' + board.checkWin());
+            declareWinner(board.checkWin());
         }
     }
 
-    runGame();
+    function declareWinner(winner) {
+        winner = winner === 1 ? 'Player X' : winner === 2 ? 'Player O' : 'Draw';
+        var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
+        $('.modal-body').html('<h3>' + text + '</h3>');
+        $('.winner').modal('show');
+    }
 
+    runGame();
 });
