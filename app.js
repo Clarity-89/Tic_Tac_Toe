@@ -190,6 +190,4 @@ $(document).ready(function () {
         runGame();
     });
 
-    //var t = new Board(dims, [0, 1, 0, 2, 1, 1, 0, 2, 2]);
-    //console.log(t.checkWin());
 });
