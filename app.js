@@ -18,16 +18,6 @@ $(document).ready(function () {
         return player === PLAYERX ? PLAYERO : PLAYERX;
     }
 
-    //Find index of subarray in array
-    function subArrayIndex(arr, sub) {
-        var target = sub.toString();
-        for (var i = 0; i < arr.length; i++) {
-            if (target === arr[i].toString()) break;
-        }
-
-        return i;
-    }
-
     //Class representing the game's board
     function Board(dims, board) {
         this.dims = dims;
@@ -40,7 +30,6 @@ $(document).ready(function () {
                 this.grid[square] = 0;
             }
         }
-
     }
 
     //Show visual representation of the grid
@@ -86,19 +75,14 @@ $(document).ready(function () {
 
         //check rows
         for (var i = 0; i < this.dims; i++) {
-
             if (this.square(i) !== 0 && this.square(i) == this.square(i + 3) && this.square(i) == this.square(i + 6)) {
-
                 return this.square(i);
             }
         }
 
         //check cols
         for (var j = 0; j < this.dims * this.dims; j += 3) {
-
-
             if (this.square(j) !== 0 && this.square(j) == this.square(j + 1) && this.square(j) == this.square(j + 2)) {
-
                 return this.square(j);
             }
         }
@@ -109,7 +93,7 @@ $(document).ready(function () {
             return this.square(4);
 
             //check draw
-        } else if (this.getEmptySquares().length === 0) {
+        } else if (this.getEmptySquares().length === 1) {
             return DRAW;
         } else {
             return 'None';
@@ -149,32 +133,56 @@ $(document).ready(function () {
 
 
     //Function that runs the game
-    function runGame(dims) {
+    function runGame() {
         //Create a new board for the game
         var tripleT = new Board(dims);
 
-        //tripleT.showGrid();
+
+            playerMove(tripleT);
+
+
+
+
+        /*else
+         {
+         alert('winner is ' + tripleT.checkWin())
+         }
+         else
+         {
+         alert('winner is ' + tripleT.checkWin())
+         }*/
+
+    }
+
+    function playerMove(board) {
         $('.square').on('click', function () {
 
-            if (tripleT.checkWin() === 'None') {
-                $(this).text('X');
-                id = $(this).attr('id');
-                tripleT.move(id, PLAYERX);
-
-                if (tripleT.checkWin() === 'None') {
-                    var move = minimax(tripleT, PLAYERO)[1];
-                    tripleT.move(move, PLAYERO);
-                    $('#' + move).text('O');
+            $(this).text('X');
+            var id = $(this).attr('id');
+            if (board.square(id) === 0) {
+                board.move(id, PLAYERX);
+                if (board.checkWin() === 'None') {
+                    AImove(board);
                 } else {
-                    alert('winner is ' + tripleT.checkWin())
+                    alert('winner is ' + board.checkWin());
                 }
             } else {
-                alert('winner is ' + tripleT.checkWin())
+                playerMove(board);
             }
-
         });
     }
 
-    runGame(dims);
+    function AImove(board) {
+        var move = minimax(board, PLAYERO)[1];
+        board.move(move, PLAYERO);
+        $('#' + move).text('O');
+        if (board.checkWin() === 'None') {
+            playerMove(board);
+        } else {
+            alert('winner is ' + board.checkWin());
+        }
+    }
+
+    runGame();
 
 });
