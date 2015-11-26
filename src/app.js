@@ -77,7 +77,7 @@ $(document).ready(function () {
     }
 
     function declareWinner(winner) {
-
+        console.log(board, board.checkWin());
         winner = winner === 1 ? 'Player X' : winner === 2 ? 'Player O' : 'Draw';
         var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
         $('.modal-body').html('<h3>' + text + '</h3>');

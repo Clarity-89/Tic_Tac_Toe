@@ -27,14 +27,19 @@ describe('Get empty squares', function () {
         board = new Board(3);
         expect(board.getEmptySquares().length).toBe(9);
     });
+
+    it('should show no empty squares when grid is full', function () {
+        board = new Board(3, [1, 1, 2, 1, 2, 2, 1, 1, 1]);
+        expect(board.getEmptySquares().length).toBe(0);
+    });
 });
 
 describe('Check Win, player 1', function () {
     it('should show when player 1 wins correctly', function () {
         board = new Board(3,
             [1, 1, 1,
-             0, 2, 2,
-             0, 2, 2]);
+             2, 2, 1,
+             2, 1, 2]);
         expect(board.checkWin()).toBe(1);
     });
 
@@ -159,8 +164,8 @@ describe('Check win, player 2', function () {
 describe('Check win, Draw', function () {
     it('should correctly identify when game draws', function () {
         board = new Board(3,
-            [1, 2, 2,
-             2, 1, 1,
+            [1, 1, 2,
+             2, 2, 1,
              1, 2, 1]);
         expect(board.checkWin()).toBe(DRAW);
     });
@@ -168,7 +173,21 @@ describe('Check win, Draw', function () {
         board = new Board(3,
             [1, 2, 2,
              2, 1, 1,
-             1, 2, 1]);
+             1, 2, 2]);
         expect(board.checkWin()).toBe(DRAW);
+    });
+    it('should not show draw when one of the players wins', function () {
+        board = new Board(3,
+            [1, 2, 1,
+             2, 1, 1,
+             1, 2, 2]);
+        expect(board.checkWin()).not.toBe(DRAW);
+    });
+    it('should not show draw when game is still in process', function () {
+        board = new Board(3,
+            [1, 2, 1,
+             2, 1, 1,
+             1, 0, 2]);
+        expect(board.checkWin()).not.toBe(DRAW);
     });
 });

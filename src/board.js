@@ -66,7 +66,6 @@ Board.prototype.move = function (square, player) {
  If PLAYERO wins, returns 2.
  If game is drawn, returns 0.
  If game is in progress, returns 'None'.*/
-
 Board.prototype.checkWin = function () {
     var winning = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
     var self = this;
@@ -74,7 +73,7 @@ Board.prototype.checkWin = function () {
     winning.forEach(function (el) {
         if (self.square(el[0]) !== 0 && self.square(el[0]) === self.square(el[1]) && self.square(el[0]) === self.square(el[2])) {
             res = self.square(el[0]);
-        } else if (self.getEmptySquares().length === 0) {
+        } else if (res == 'None' && self.getEmptySquares().length === 0) {
             res = DRAW;
         }
     });
@@ -85,4 +84,3 @@ Board.prototype.clone = function () {
 
     return new Board(dims, this.grid);
 };
-
