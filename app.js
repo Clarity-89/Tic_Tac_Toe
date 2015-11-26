@@ -12,6 +12,7 @@ $(document).ready(function () {
             2: -1
         };
     var dims = 3; //dimensions for the game's board
+    var board;
 
     //helper functions
     function switchPlayer(player) {
@@ -134,18 +135,17 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
-
+        board = new Board(dims);
         //clear previous board
         for (var i = 0; i < dims * dims; i++) {
             $('#' + i).text('');
         }
         //Create a new board for the game
-        var tripleT = new Board(dims);
 
-        playerMove(tripleT);
+        playerMove();
     }
 
-    function playerMove(board) {
+    function playerMove() {
 
         $('.square').on('click', function () {
 
@@ -156,6 +156,7 @@ $(document).ready(function () {
                 if (board.checkWin() === 'None') {
                     AImove(board);
                 } else {
+                    console.log(board)
                     declareWinner(board.checkWin());
                 }
             } else {
@@ -164,23 +165,26 @@ $(document).ready(function () {
         });
     }
 
-    function AImove(board) {
+    function AImove() {
         var move = minimax(board, PLAYERO)[1];
         board.move(move, PLAYERO);
         $('#' + move).text('O');
         if (board.checkWin() === 'None') {
             playerMove(board);
         } else {
+            console.log(board)
             declareWinner(board.checkWin());
         }
     }
 
     function declareWinner(winner) {
+
         winner = winner === 1 ? 'Player X' : winner === 2 ? 'Player O' : 'Draw';
         var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
         $('.modal-body').html('<h3>' + text + '</h3>');
         $('.winner').modal('show');
     }
+
 
     runGame();
 
