@@ -103,9 +103,9 @@ $(document).ready(function () {
 
     Board.prototype.clone = function () {
 
-        return $.extend(true, {}, this);
+        //return $.extend(true, {}, this);
 
-        //return new Board(dims, this.grid);
+        return new Board(dims, this.grid);
     };
 
     function minimax(board, player) {
@@ -135,19 +135,19 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
+        //Create a new board for the game
         board = new Board(dims);
+
         //clear previous board
         for (var i = 0; i < dims * dims; i++) {
             $('#' + i).text('');
         }
-        //Create a new board for the game
-
         playerMove();
     }
 
     function playerMove() {
-
-        $('.square').on('click', function () {
+        var sq = $('.square');
+        sq.on('click', function () {
 
             var id = $(this).attr('id');
             if (board.square(id) === 0) {
@@ -156,7 +156,7 @@ $(document).ready(function () {
                 if (board.checkWin() === 'None') {
                     AImove(board);
                 } else {
-                    console.log(board)
+                    sq = undefined;
                     declareWinner(board.checkWin());
                 }
             } else {
@@ -172,7 +172,7 @@ $(document).ready(function () {
         if (board.checkWin() === 'None') {
             playerMove(board);
         } else {
-            console.log(board)
+            //console.log(board)
             declareWinner(board.checkWin());
         }
     }
@@ -185,12 +185,12 @@ $(document).ready(function () {
         $('.winner').modal('show');
     }
 
-
     runGame();
 
     $('#replay').on('click', function () {
         $('.winner').modal('hide');
-        runGame();
+        //runGame();
+        location.reload(true);
     });
 
 });
