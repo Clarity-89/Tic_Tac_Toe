@@ -156,7 +156,6 @@ $(document).ready(function () {
                 if (board.checkWin() === 'None') {
                     AImove(board);
                 } else {
-                    sq = undefined;
                     declareWinner(board.checkWin());
                 }
             } else {

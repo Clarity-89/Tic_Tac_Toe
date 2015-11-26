@@ -1,4 +1,8 @@
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Lato', sans-serif;
     background: url('img/back.jpg') no-repeat;
@@ -21,7 +25,7 @@ body {
 }
 
 .container {
-    margin-top: 5%;
+    margin-top: 7%;
 }
 
 h1, .modal-title, .modal-body {
@@ -34,5 +38,16 @@ td {
     font-size: 48px;
 }
 
+@media screen and (max-width: 468px) {
+    .square {
+        width: 100px;
+        height: 100px;
+    }
 
+    td {
+        padding: 1px;
+        text-align: center;
+        font-size: 32px;
+    }
+}
 
