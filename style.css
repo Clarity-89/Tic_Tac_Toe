@@ -50,6 +50,18 @@ td {
     font-size: 20px;
 }
 
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: #c10f26;
+}
+
 @media screen and (max-width: 468px) {
     .square {
         width: 100px;
