@@ -73,35 +73,20 @@ $(document).ready(function () {
      If PLAYERO wins, returns 2.
      If game is drawn, returns 0.
      If game is in progress, returns 'None'.*/
+
     Board.prototype.checkWin = function () {
-
-        //check rows
-        for (var i = 0; i < this.dims; i++) {
-            if (this.square(i) !== 0 && this.square(i) == this.square(i + 3) && this.square(i) == this.square(i + 6)) {
-                return this.square(i);
+        var winning = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+        var self = this;
+        var res = 'None';
+        winning.forEach(function (el) {
+            if (self.square(el[0]) !== 0 && self.square(el[0]) === self.square(el[1]) && self.square(el[0]) === self.square(el[2])) {
+                res = self.square(el[0]);
+            } else if (self.getEmptySquares().length === 0) {
+                res = DRAW;
             }
-        }
-
-        //check cols
-        for (var j = 0; j < this.dims * this.dims; j += 3) {
-            if (this.square(j) !== 0 && this.square(j) == this.square(j + 1) && this.square(j) == this.square(j + 2)) {
-                return this.square(j);
-            }
-        }
-
-        //check diags
-        if (this.square(4) !== 0 && (this.square(0) == this.square(4) && this.square(0) == this.square(8) ||
-            this.square(2) == this.square(4) && this.square(2) == this.square(6))) {
-            return this.square(4);
-
-            //check draw
-        } else if (this.getEmptySquares().length === 0) {
-            return DRAW;
-        } else {
-            return 'None';
-        }
+        });
+        return res;
     };
-
     //return a copy of the board
     Board.prototype.clone = function () {
 
@@ -188,5 +173,8 @@ $(document).ready(function () {
         $('.winner').modal('hide');
         location.reload(true);
     });
+
+    var t = new Board(dims, [0, 2, 1, 0, 2, 0, 1, 2, 1]);
+    console.log(t.checkWin());
 
 });
