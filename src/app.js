@@ -11,7 +11,6 @@ $(document).ready(function () {
         return player === PLAYERX ? PLAYERO : PLAYERX;
     }
 
-
     function minimax(board, player) {
         var mult = SCORES[String(player)], thisScore,
             empty = board.getEmptySquares(), l = empty.length,
@@ -34,7 +33,6 @@ $(document).ready(function () {
             return [mult * maxScore, bestMove];
         }
     }
-
 
     //Function that runs the game
     function runGame() {
