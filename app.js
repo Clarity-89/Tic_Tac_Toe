@@ -11,6 +11,7 @@ $(document).ready(function () {
             0: 0,
             2: -1
         };
+
     var dims = 3; //dimensions for the game's board
     var board;
 
@@ -33,7 +34,7 @@ $(document).ready(function () {
         }
     }
 
-    //Show visual representation of the grid
+    //Show visual representation of the grid for debugging purposes
     Board.prototype.showGrid = function () {
         var grid = [];
         for (var i = 0; i < dims * dims; i++) {
@@ -42,14 +43,14 @@ $(document).ready(function () {
         return grid;
     };
 
-    /*Returns one of the three constants EMPTY, PLAYERX, or PLAYERO
-     that correspond to the contents of the board at position (row, col).*/
+    /*Returns one of the three constants for EMPTY, PLAYERX, or PLAYERO
+     that correspond to the contents of the board at position (square).*/
     Board.prototype.square = function (sqr) {
 
         return this.grid[sqr];
     };
 
-    //Return an array of all empty squares in form [row, col]
+    //Return an array of all empty squares in form [squares]
     Board.prototype.getEmptySquares = function () {
         var empty = [];
         for (var i = 0; i < this.dims * this.dims; i++) {
@@ -58,7 +59,7 @@ $(document).ready(function () {
         return empty;
     };
 
-    /*Place player on the board at position (row, col).
+    /*Place player on the board at position (square).
      player should be either the constant PLAYERX or PLAYERO.
      Does nothing if board square is not empty.*/
     Board.prototype.move = function (square, player) {
@@ -71,7 +72,7 @@ $(document).ready(function () {
      If PLAYERX wins, returns 1.
      If PLAYERO wins, returns 2.
      If game is drawn, returns 0.
-     If game is in progress, returns None.*/
+     If game is in progress, returns 'None'.*/
     Board.prototype.checkWin = function () {
 
         //check rows
@@ -94,23 +95,21 @@ $(document).ready(function () {
             return this.square(4);
 
             //check draw
-        } else if (this.getEmptySquares().length === 1) {
+        } else if (this.getEmptySquares().length === 0) {
             return DRAW;
         } else {
             return 'None';
         }
     };
 
+    //return a copy of the board
     Board.prototype.clone = function () {
-
-        //return $.extend(true, {}, this);
 
         return new Board(dims, this.grid);
     };
 
     function minimax(board, player) {
-        //console.log(board, player)
-        var mult = SCORES['' + player], thisScore,
+        var mult = SCORES[String(player)], thisScore,
             empty = board.getEmptySquares(), l = empty.length,
             maxScore = -1, bestMove = null;
 
@@ -171,7 +170,6 @@ $(document).ready(function () {
         if (board.checkWin() === 'None') {
             playerMove(board);
         } else {
-            //console.log(board)
             declareWinner(board.checkWin());
         }
     }
@@ -188,7 +186,6 @@ $(document).ready(function () {
 
     $('#replay').on('click', function () {
         $('.winner').modal('hide');
-        //runGame();
         location.reload(true);
     });
 
