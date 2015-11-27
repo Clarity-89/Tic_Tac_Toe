@@ -209,3 +209,20 @@ describe('Check win, None', function () {
         expect(board.checkWin()).toBe('None');
     });
 });
+
+describe('Clone method', function () {
+    it('should make a copy of a passed board', function(){
+        board = new Board(3, [1,0,0,0,0,0,0,0,0]);
+        var copy = board.clone();
+
+        expect(board).toEqual(copy);
+    });
+
+    it('the original board should not be affected by changes to copy', function(){
+        board = new Board(3, [1,0,0,0,0,0,0,0,0]);
+        var copy = board.clone();
+        copy.move(2, PLAYERO);
+        expect(board.grid).not.toEqual(copy.grid);
+        expect(board.grid).toEqual([1,0,0,0,0,0,0,0,0]);
+    });
+});
