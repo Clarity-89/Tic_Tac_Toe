@@ -171,7 +171,7 @@ describe('Check Win', function () {
 
         board = new Board(3,
             [1, 2, 1,
-                2, 1, 1,
+             2, 1, 1,
                 0, 1, 2]);
         expect(board.checkWin()).toBe('None');
     });

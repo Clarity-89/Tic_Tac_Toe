@@ -4,9 +4,9 @@
 
 $(document).ready(function () {
 
-    var board;
+    var board, sq = $('.square');
 
-    //helper functions
+    //helper function
     function switchPlayer(player) {
         return player === PLAYERX ? PLAYERO : PLAYERX;
     }
@@ -36,6 +36,9 @@ $(document).ready(function () {
 
     //Function that runs the game
     function runGame() {
+        // remove all event listeners from element to prev ent memory leaks
+        sq.off();
+
         //Create a new board for the game
         board = new Board(dims);
 
@@ -47,7 +50,7 @@ $(document).ready(function () {
     }
 
     function playerMove() {
-        var sq = $('.square');
+
         sq.on('click', function () {
 
             var id = $(this).attr('id');
@@ -77,7 +80,6 @@ $(document).ready(function () {
     }
 
     function declareWinner(winner) {
-        console.log(board, board.checkWin());
         winner = winner === 1 ? 'Player X' : winner === 2 ? 'Player O' : 'Draw';
         var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
         $('.modal-body').html('<h3>' + text + '</h3>');
@@ -88,6 +90,6 @@ $(document).ready(function () {
 
     $('#replay').on('click', function () {
         $('.winner').modal('hide');
-        location.reload(true);
+        runGame();
     });
 });
