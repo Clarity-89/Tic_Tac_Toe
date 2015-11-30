@@ -45,7 +45,7 @@ td {
     padding: 40px;
     text-align: center;
     font-size: 48px;
-    color: #dddddd;
+    color: #c10f26;
     font-weight: 600;
 }
 
@@ -67,6 +67,7 @@ footer {
 }
 
 @media screen and (max-width: 468px) {
+
     .square {
         width: 100px;
         height: 100px;
@@ -76,6 +77,10 @@ footer {
         padding: 1px;
         text-align: center;
         font-size: 32px;
+    }
+
+    footer {
+        font-size: 14px;
     }
 }
 
