@@ -8,6 +8,8 @@ body {
     font-family: 'Montserrat', sans-serif;
     background: url('img/back.jpg') no-repeat;
     background-size: cover;
+    text-shadow: 0px 0px 3px #000;
+    color: white;
 }
 
 .square {
@@ -49,7 +51,6 @@ td {
     padding: 40px;
     text-align: center;
     font-size: 48px;
-    /*color: #c10f26;*/
     font-weight: 900;
     text-shadow: 0px 0px 3px #000;
     color: white;
@@ -70,11 +71,18 @@ footer {
 #start-screen {
     text-align: center;
     font-size: 20px;
+    margin-top: 100px;
 }
 
 a {
     color: white;
 }
+
+.winner {
+    color: #525252;
+    text-shadow: none;
+}
+
 @media screen and (max-width: 468px) {
 
     .square {
