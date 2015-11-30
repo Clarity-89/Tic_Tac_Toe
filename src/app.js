@@ -4,7 +4,9 @@
 
 $(document).ready(function () {
 
-    var board, sq = $('.square');
+    var board, human, computer, hmarker, cmarker,
+        sq = $('.square'), DOMboard = $('#board'), startScreen = $('#start-screen');
+
 
     //helper function
     function switchPlayer(player) {
@@ -46,19 +48,24 @@ $(document).ready(function () {
         for (var i = 0; i < dims * dims; i++) {
             $('#' + i).text('');
         }
+
+        //Make first move for the computer
+        if (computer === PLAYERX) {
+            board.move(4, computer);
+            $('#4').text('X').fadeIn('slow');
+        }
         playerMove();
     }
 
     function playerMove() {
 
         sq.on('click', function () {
-
             var id = $(this).attr('id');
             if (board.square(id) === 0) {
-                $(this).text('X');
-                board.move(id, PLAYERX);
+                $(this).text(hmarker);
+                board.move(id, human);
                 if (board.checkWin() === 'None') {
-                    AImove(board);
+                    AImove();
                 } else {
                     declareWinner(board.checkWin());
                 }
@@ -69,9 +76,9 @@ $(document).ready(function () {
     }
 
     function AImove() {
-        var move = minimax(board, PLAYERO)[1];
-        board.move(move, PLAYERO);
-        $('#' + move).text('O');
+        var move = minimax(board, computer)[1];
+        board.move(move, computer);
+        $('#' + move).text(cmarker);
         if (board.checkWin() === 'None') {
             playerMove(board);
         } else {
@@ -84,12 +91,27 @@ $(document).ready(function () {
         var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
         $('.modal-body').html('<h3>' + text + '</h3>');
         $('.winner').modal('show');
+
     }
 
-    runGame();
+    function choosePlayer() {
+        DOMboard.css('display', 'none');
+        startScreen.css('display', 'block');
+        $('.player').on('click', function () {
+            DOMboard.css('display', 'block');
+            startScreen.css('display', 'none');
+            human = $(this).text() == 'X' ? PLAYERX : PLAYERO;
+            hmarker = $(this).text();
+            computer = switchPlayer(human);
+            cmarker = computer == PLAYERO ? 'O' : 'X';
+            runGame();
+        });
+    }
+
+    choosePlayer();
 
     $('#replay').on('click', function () {
         $('.winner').modal('hide');
-        runGame();
+        choosePlayer();
     });
 });
