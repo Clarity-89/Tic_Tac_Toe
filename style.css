@@ -49,13 +49,10 @@ td {
     padding: 40px;
     text-align: center;
     font-size: 48px;
-    color: #c10f26;
-    font-weight: 600;
-}
-
-#rules {
-    text-align: center;
-    font-size: 20px;
+    /*color: #c10f26;*/
+    font-weight: 900;
+    text-shadow: 0px 0px 3px #000;
+    color: white;
 }
 
 footer {
@@ -64,16 +61,17 @@ footer {
     bottom: 0;
     width: 100%;
     text-align: center;
-    font-family: Arial, sans-serif;
-    font-weight: 500;
+    font-weight: 900;
+    text-shadow: 0px 0px 3px #000;
     font-size: 18px;
-    color: #c10f26;
+    color: white;
 }
 
 #start-screen {
     text-align: center;
     font-size: 20px;
 }
+
 @media screen and (max-width: 468px) {
 
     .square {
