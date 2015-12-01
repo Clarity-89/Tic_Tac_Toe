@@ -41,6 +41,9 @@ $(document).ready(function () {
         // remove all event listeners from element to prev ent memory leaks
         sq.off();
 
+        //set squares' opacity back to 0 to enable animation
+        sq.css('opacity', 0);
+
         //Create a new board for the game
         board = new Board(dims);
 
@@ -52,7 +55,7 @@ $(document).ready(function () {
         //Make first move for the computer
         if (computer === PLAYERX) {
             board.move(4, computer);
-            $('#4').text('X').fadeIn('slow');
+            $('#4').text('X').animate({opacity: 1}, 600);
         }
         playerMove();
     }
@@ -62,13 +65,15 @@ $(document).ready(function () {
         sq.on('click', function () {
             var id = $(this).attr('id');
             if (board.square(id) === 0) {
-                $(this).text(hmarker);
                 board.move(id, human);
-                if (board.checkWin() === 'None') {
-                    AImove();
-                } else {
-                    declareWinner(board.checkWin());
-                }
+                $(this).text(hmarker).animate({opacity: 1}, function () {
+
+                    if (board.checkWin() === 'None') {
+                        AImove();
+                    } else {
+                        declareWinner(board.checkWin());
+                    }
+                });
             } else {
                 playerMove(board);
             }
@@ -78,12 +83,13 @@ $(document).ready(function () {
     function AImove() {
         var move = minimax(board, computer)[1];
         board.move(move, computer);
-        $('#' + move).text(cmarker);
-        if (board.checkWin() === 'None') {
-            playerMove(board);
-        } else {
-            declareWinner(board.checkWin());
-        }
+        $('#' + move).text(cmarker).animate({opacity: 1}, function () {
+            if (board.checkWin() === 'None') {
+                playerMove(board);
+            } else {
+                declareWinner(board.checkWin());
+            }
+        });
     }
 
     function declareWinner(winner) {
@@ -91,7 +97,6 @@ $(document).ready(function () {
         var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
         $('.modal-body').html('<h3>' + text + '</h3>');
         $('.winner').modal('show');
-
     }
 
     function choosePlayer() {
