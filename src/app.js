@@ -2,121 +2,132 @@
  * Created by Alex on 15/11/2015.
  */
 
-$(document).ready(function () {
+$(document).ready(function() {
+  var board,
+    human,
+    computer,
+    hmarker,
+    cmarker,
+    sq = $(".square"),
+    DOMboard = $("#board"),
+    startScreen = $("#start-screen");
 
-    var board, human, computer, hmarker, cmarker,
-        sq = $('.square'), DOMboard = $('#board'), startScreen = $('#start-screen');
+  //helper function
+  function switchPlayer(player) {
+    return player === PLAYERX ? PLAYERO : PLAYERX;
+  }
 
+  function minimax(board, player) {
+    var mult = SCORES[String(player)],
+      thisScore,
+      empty = board.getEmptySquares(),
+      l = empty.length,
+      maxScore = -1,
+      bestMove = null;
 
-    //helper function
-    function switchPlayer(player) {
-        return player === PLAYERX ? PLAYERO : PLAYERX;
+    if (board.checkWin() !== "None") {
+      return [SCORES[board.checkWin()], 0];
+    } else {
+      for (var i = 0; i < l; i++) {
+        var copy = board.clone();
+        copy.move(empty[i], player);
+        thisScore = mult * minimax(copy, switchPlayer(player))[0];
+
+        if (thisScore >= maxScore) {
+          maxScore = thisScore;
+          bestMove = empty[i];
+        }
+      }
+
+      return [mult * maxScore, bestMove];
+    }
+  }
+
+  //Function that runs the game
+  function runGame() {
+    // remove all event listeners from element to prev ent memory leaks
+    sq.off();
+
+    //set squares' opacity back to 0 to enable animation
+    sq.css("opacity", 0);
+
+    //Create a new board for the game
+    board = new Board(dims);
+
+    //clear previous board
+    for (var i = 0; i < dims * dims; i++) {
+      $("#" + i).text("");
     }
 
-    function minimax(board, player) {
-        var mult = SCORES[String(player)], thisScore,
-            empty = board.getEmptySquares(), l = empty.length,
-            maxScore = -1, bestMove = null;
-
-        if (board.checkWin() != 'None') {
-            return [SCORES[board.checkWin()], 0];
-        } else {
-            for (var i = 0; i < l; i++) {
-                var copy = board.clone();
-                copy.move(empty[i], player);
-                thisScore = mult * minimax(copy, switchPlayer(player))[0];
-
-                if (thisScore >= maxScore) {
-                    maxScore = thisScore;
-                    bestMove = empty[i];
-                }
-            }
-
-            return [mult * maxScore, bestMove];
-        }
+    //Make first move for the computer
+    if (computer === PLAYERX) {
+      board.move(4, computer);
+      $("#4")
+        .text("X")
+        .animate({ opacity: 1 }, 600);
     }
+    playerMove();
+  }
 
-    //Function that runs the game
-    function runGame() {
-        // remove all event listeners from element to prev ent memory leaks
-        sq.off();
-
-        //set squares' opacity back to 0 to enable animation
-        sq.css('opacity', 0);
-
-        //Create a new board for the game
-        board = new Board(dims);
-
-        //clear previous board
-        for (var i = 0; i < dims * dims; i++) {
-            $('#' + i).text('');
-        }
-
-        //Make first move for the computer
-        if (computer === PLAYERX) {
-            board.move(4, computer);
-            $('#4').text('X').animate({opacity: 1}, 600);
-        }
-        playerMove();
-    }
-
-    function playerMove() {
-
-        sq.on('click', function () {
-            var id = $(this).attr('id');
-            if (board.square(id) === 0) {
-                board.move(id, human);
-                $(this).text(hmarker).animate({opacity: 1}, function () {
-
-                    if (board.checkWin() === 'None') {
-                        AImove();
-                    } else {
-                        declareWinner(board.checkWin());
-                    }
-                });
+  function playerMove() {
+    sq.on("click", function() {
+      var id = $(this).attr("id");
+      if (board.square(id) === 0) {
+        board.move(id, human);
+        $(this)
+          .text(hmarker)
+          .animate({ opacity: 1 }, function() {
+            if (board.checkWin() === "None") {
+              AImove();
             } else {
-                playerMove(board);
+              declareWinner(board.checkWin());
             }
-        });
-    }
-
-    function AImove() {
-        var move = minimax(board, computer)[1];
-        board.move(move, computer);
-        $('#' + move).text(cmarker).animate({opacity: 1}, function () {
-            if (board.checkWin() === 'None') {
-                playerMove(board);
-            } else {
-                declareWinner(board.checkWin());
-            }
-        });
-    }
-
-    function declareWinner(winner) {
-        winner = winner === 1 ? 'Player X' : winner === 2 ? 'Player O' : 'Draw';
-        var text = winner == 'Draw' ? "It's a draw!" : winner + ' wins!';
-        $('.modal-body').html('<h3>' + text + '</h3>');
-        $('.winner').modal('show');
-    }
-
-    function choosePlayer() {
-        DOMboard.css('display', 'none');
-        startScreen.css('display', 'block');
-        $('.player').on('click', function () {
-            DOMboard.css('display', 'block');
-            startScreen.css('display', 'none');
-            human = $(this).text() == 'X' ? PLAYERX : PLAYERO;
-            hmarker = $(this).text();
-            computer = switchPlayer(human);
-            cmarker = computer == PLAYERO ? 'O' : 'X';
-            runGame();
-        });
-    }
-
-    choosePlayer();
-
-    $('#replay').on('click', function () {
-        $('.winner').modal('hide');
-        choosePlayer();
+          });
+      } else {
+        playerMove(board);
+      }
     });
+  }
+
+  function AImove() {
+    var move = minimax(board, computer)[1];
+    board.move(move, computer);
+    $("#" + move)
+      .text(cmarker)
+      .animate({ opacity: 1 }, function() {
+        if (board.checkWin() === "None") {
+          playerMove(board);
+        } else {
+          declareWinner(board.checkWin());
+        }
+      });
+  }
+
+  function declareWinner(winner) {
+    winner = winner === 1 ? "Player X" : winner === 2 ? "Player O" : "Draw";
+    var text = winner === "Draw" ? "It's a draw!" : winner + " wins!";
+    $(".modal-body").html("<h3>" + text + "</h3>");
+    $(".winner").modal("show");
+  }
+
+  function choosePlayer() {
+    DOMboard.css("display", "none");
+    startScreen.css("display", "block");
+    $(".player").on("click", function() {
+      DOMboard.css("display", "block");
+      startScreen.css("display", "none");
+      human = $(this).text() === "X" ? PLAYERX : PLAYERO;
+      hmarker = $(this).text();
+      computer = switchPlayer(human);
+      cmarker = computer === PLAYERO ? "O" : "X";
+      runGame();
+    });
+  }
+
+  choosePlayer();
+
+  $("#replay").on("click", function() {
+    $(".winner").modal("hide");
+    choosePlayer();
+  });
 });
